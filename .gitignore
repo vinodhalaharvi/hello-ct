@@ -1,0 +1,12 @@
+bin/
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+.DS_Store
+.idea/
+.vscode/
+vcs.xml
+workspace.xml

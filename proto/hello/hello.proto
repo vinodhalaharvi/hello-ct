@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package hello;
+
+option go_package = "github.com/example/hello-ct/gen/go/hello;hello";
+
+import "category/options.proto";
+
+// Enable effects
+option (category.category_file) = {
+    effects: [NETWORK, DATABASE]
+};
+
+// Greeting with monoid support
+message Greeting {
+    option (category.category) = {
+        monoid: true
+        firestore_bridge: true
+    };
+
+    string id = 1;
+    string message = 2;
+    int32 count = 3 [(category.field_category) = { combine: SUM }];
+}
+
+message SayHelloRequest {
+    string name = 1;
+}
+
+message SayHelloResponse {
+    Greeting greeting = 1;
+}
+
+message ListGreetingsRequest {
+    int32 limit = 1;
+}
+
+message ListGreetingsResponse {
+    repeated Greeting greetings = 1;
+}
+
+service HelloService {
+    option (category.category_service) = {
+        kleisli: true
+        middleware: true
+        mock: true
+        connect_bridge: true
+    };
+
+    rpc SayHello(SayHelloRequest) returns (SayHelloResponse) {
+        option (category.category_method) = {
+            idempotent: true
+        };
+    }
+
+    rpc ListGreetings(ListGreetingsRequest) returns (ListGreetingsResponse) {
+        option (category.category_method) = {
+            idempotent: true
+        };
+    }
+}
