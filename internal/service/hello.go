@@ -2,21 +2,21 @@ package service
 
 import (
 	"context"
-	"fmt"
-	"sync"
-	"sync/atomic"
 
+	"cloud.google.com/go/firestore"
 	"github.com/example/hello-ct/gen/go/hello"
+	"github.com/google/uuid"
 )
 
 type helloService struct {
-	greetings sync.Map
-	counter   atomic.Int64
+	greetings *hello.GreetingCollection
 }
 
-// NewHelloService creates a HelloServiceK using CT patterns
-func NewHelloService() *hello.HelloServiceK {
-	svc := &helloService{}
+// NewHelloService creates a HelloServiceK backed by Firestore
+func NewHelloService(fsClient *firestore.Client) *hello.HelloServiceK {
+	svc := &helloService{
+		greetings: hello.NewGreetingCollection(fsClient),
+	}
 
 	return &hello.HelloServiceK{
 		SayHello:      svc.sayHello,
@@ -26,41 +26,40 @@ func NewHelloService() *hello.HelloServiceK {
 
 func (s *helloService) sayHello(req *hello.SayHelloRequest) hello.NetworkOp[*hello.SayHelloResponse] {
 	return func(ctx context.Context) (*hello.SayHelloResponse, error) {
-		count := s.counter.Add(1)
+		id := uuid.New().String()
 
 		greeting := &hello.Greeting{
-			Id:      fmt.Sprintf("greeting-%d", count),
-			Message: fmt.Sprintf("Hello, %s!", req.Name),
-			Count:   int32(count),
+			Id:      id,
+			Message: "Hello, " + req.Name + "!",
+			Count:   1,
 		}
 
-		s.greetings.Store(greeting.Id, greeting)
+		// Save to Firestore - LiftDBOpToNetworkOp bridges the effect types
+		saveOp := hello.LiftDBOpToNetworkOp(s.greetings.Doc(id).Set(greeting))
+		if _, err := saveOp(ctx); err != nil {
+			return nil, err
+		}
 
-		return &hello.SayHelloResponse{
-			Greeting: greeting,
-		}, nil
+		return &hello.SayHelloResponse{Greeting: greeting}, nil
 	}
 }
 
 func (s *helloService) listGreetings(req *hello.ListGreetingsRequest) hello.NetworkOp[*hello.ListGreetingsResponse] {
 	return func(ctx context.Context) (*hello.ListGreetingsResponse, error) {
-		var greetings []*hello.Greeting
-
 		limit := req.Limit
 		if limit <= 0 {
 			limit = 10
 		}
 
-		s.greetings.Range(func(key, value any) bool {
-			if len(greetings) >= int(limit) {
-				return false
-			}
-			greetings = append(greetings, value.(*hello.Greeting))
-			return true
-		})
+		// Query Firestore
+		queryOp := hello.LiftDBOpToNetworkOp(
+			s.greetings.Where("count", ">=", 0).Limit(int(limit)).GetAll(),
+		)
+		greetings, err := queryOp(ctx)
+		if err != nil {
+			return nil, err
+		}
 
-		return &hello.ListGreetingsResponse{
-			Greetings: greetings,
-		}, nil
+		return &hello.ListGreetingsResponse{Greetings: greetings}, nil
 	}
 }

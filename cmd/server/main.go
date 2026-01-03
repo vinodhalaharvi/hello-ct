@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	"cloud.google.com/go/firestore"
 	"golang.org/x/net/http2"
 	"golang.org/x/net/http2/h2c"
 
@@ -16,7 +17,20 @@ import (
 )
 
 func main() {
-	svc := service.NewHelloService()
+	ctx := context.Background()
+
+	projectID := os.Getenv("GOOGLE_CLOUD_PROJECT")
+	if projectID == "" {
+		projectID = "your-project-id"
+	}
+
+	client, err := firestore.NewClient(ctx, projectID)
+	if err != nil {
+		log.Fatalf("Failed to create Firestore client: %v", err)
+	}
+	defer client.Close()
+
+	svc := service.NewHelloService(client)
 
 	// Add logging middleware
 	wrapped := hello.ApplyHelloServiceMiddleware(svc, &hello.HelloServiceMiddleware{

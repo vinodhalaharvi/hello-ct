@@ -5,6 +5,7 @@ go 1.25.0
 require (
 	cloud.google.com/go/firestore v1.20.0
 	connectrpc.com/connect v1.19.1
+	github.com/google/uuid v1.6.0
 	github.com/vinodhalaharvi/buf-go-plugins v0.0.0-00010101000000-000000000000
 	golang.org/x/net v0.48.0
 	golang.org/x/sync v0.19.0
