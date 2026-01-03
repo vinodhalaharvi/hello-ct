@@ -4,58 +4,59 @@ package hello;
 
 option go_package = "github.com/example/hello-ct/gen/go/hello;hello";
 
+import "buf/validate/validate.proto";
 import "category/options.proto";
 
 // Enable effects
 option (category.category_file) = {
-    effects: [NETWORK, DATABASE]
+  effects: [NETWORK, DATABASE]
 };
 
 // Greeting with monoid support
 message Greeting {
-    option (category.category) = {
-        monoid: true
-        firestore_bridge: true
-    };
+  option (category.category) = {
+    monoid: true
+    firestore_bridge: true
+  };
 
-    string id = 1;
-    string message = 2;
-    int32 count = 3 [(category.field_category) = { combine: SUM }];
+  string id = 1;
+  string message = 2 [(buf.validate.field).string.min_len = 1];
+  int32 count = 3 [(category.field_category) = { combine: SUM }];
 }
 
 message SayHelloRequest {
-    string name = 1;
+  string name = 1 [(buf.validate.field).string = {min_len: 1, max_len: 100}];
 }
 
 message SayHelloResponse {
-    Greeting greeting = 1;
+  Greeting greeting = 1;
 }
 
 message ListGreetingsRequest {
-    int32 limit = 1;
+  int32 limit = 1 [(buf.validate.field).int32 = {gte: 1, lte: 100}];
 }
 
 message ListGreetingsResponse {
-    repeated Greeting greetings = 1;
+  repeated Greeting greetings = 1;
 }
 
 service HelloService {
-    option (category.category_service) = {
-        kleisli: true
-        middleware: true
-        mock: true
-        connect_bridge: true
+  option (category.category_service) = {
+    kleisli: true
+    middleware: true
+    mock: true
+    connect_bridge: true
+  };
+
+  rpc SayHello(SayHelloRequest) returns (SayHelloResponse) {
+    option (category.category_method) = {
+      idempotent: true
     };
+  }
 
-    rpc SayHello(SayHelloRequest) returns (SayHelloResponse) {
-        option (category.category_method) = {
-            idempotent: true
-        };
-    }
-
-    rpc ListGreetings(ListGreetingsRequest) returns (ListGreetingsResponse) {
-        option (category.category_method) = {
-            idempotent: true
-        };
-    }
+  rpc ListGreetings(ListGreetingsRequest) returns (ListGreetingsResponse) {
+    option (category.category_method) = {
+      idempotent: true
+    };
+  }
 }

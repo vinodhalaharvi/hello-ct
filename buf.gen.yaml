@@ -1,4 +1,13 @@
 version: v2
+managed:
+  enabled: true
+  override:
+    - file_option: go_package_prefix
+      value: github.com/example/hello-ct/gen/go
+  disable:
+    - file_option: go_package
+      module: buf.build/bufbuild/protovalidate
+
 plugins:
   # Go backend
   - local: protoc-gen-go
@@ -11,7 +20,7 @@ plugins:
     out: gen/go
     opt: paths=source_relative
 
-  # TypeScript frontend (v1 compatible)
+  # TypeScript frontend
   - remote: buf.build/bufbuild/es:v1.10.0
     out: gen/ts
     opt: target=ts

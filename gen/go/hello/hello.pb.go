@@ -7,7 +7,8 @@
 package hello
 
 import (
-	_ "github.com/vinodhalaharvi/buf-go-plugins/cmd/protoc-gen-category/proto/category"
+	_ "buf.build/gen/go/bufbuild/protovalidate/protocolbuffers/go/buf/validate"
+	_ "github.com/example/hello-ct/gen/go/category"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -263,23 +264,25 @@ var File_hello_hello_proto protoreflect.FileDescriptor
 
 const file_hello_hello_proto_rawDesc = "" +
 	"\n" +
-	"\x11hello/hello.proto\x12\x05hello\x1a\x16category/options.proto\"\\\n" +
+	"\x11hello/hello.proto\x12\x05hello\x1a\x1bbuf/validate/validate.proto\x1a\x16category/options.proto\"e\n" +
 	"\bGreeting\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\tR\x02id\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1c\n" +
-	"\x05count\x18\x03 \x01(\x05B\x06\x92\xb5\x18\x02\b\x02R\x05count:\b\x8a\xb5\x18\x04\x10\x01P\x01\"%\n" +
-	"\x0fSayHelloRequest\x12\x12\n" +
-	"\x04name\x18\x01 \x01(\tR\x04name\"?\n" +
+	"\x02id\x18\x01 \x01(\tR\x02id\x12!\n" +
+	"\amessage\x18\x02 \x01(\tB\a\xbaH\x04r\x02\x10\x01R\amessage\x12\x1c\n" +
+	"\x05count\x18\x03 \x01(\x05B\x06\x92\xb5\x18\x02\b\x02R\x05count:\b\x8a\xb5\x18\x04\x10\x01P\x01\"0\n" +
+	"\x0fSayHelloRequest\x12\x1d\n" +
+	"\x04name\x18\x01 \x01(\tB\t\xbaH\x06r\x04\x10\x01\x18dR\x04name\"?\n" +
 	"\x10SayHelloResponse\x12+\n" +
-	"\bgreeting\x18\x01 \x01(\v2\x0f.hello.GreetingR\bgreeting\",\n" +
-	"\x14ListGreetingsRequest\x12\x14\n" +
-	"\x05limit\x18\x01 \x01(\x05R\x05limit\"F\n" +
+	"\bgreeting\x18\x01 \x01(\v2\x0f.hello.GreetingR\bgreeting\"7\n" +
+	"\x14ListGreetingsRequest\x12\x1f\n" +
+	"\x05limit\x18\x01 \x01(\x05B\t\xbaH\x06\x1a\x04\x18d(\x01R\x05limit\"F\n" +
 	"\x15ListGreetingsResponse\x12-\n" +
 	"\tgreetings\x18\x01 \x03(\v2\x0f.hello.GreetingR\tgreetings2\xb5\x01\n" +
 	"\fHelloService\x12C\n" +
 	"\bSayHello\x12\x16.hello.SayHelloRequest\x1a\x17.hello.SayHelloResponse\"\x06\xa2\xb5\x18\x02\b\x01\x12R\n" +
-	"\rListGreetings\x12\x1b.hello.ListGreetingsRequest\x1a\x1c.hello.ListGreetingsResponse\"\x06\xa2\xb5\x18\x02\b\x01\x1a\f\x9a\xb5\x18\b\b\x01\x10\x018\x01@\x01B8\x82\xb5\x18\x04\n" +
-	"\x02\x00\x01Z.github.com/example/hello-ct/gen/go/hello;hellob\x06proto3"
+	"\rListGreetings\x12\x1b.hello.ListGreetingsRequest\x1a\x1c.hello.ListGreetingsResponse\"\x06\xa2\xb5\x18\x02\b\x01\x1a\f\x9a\xb5\x18\b\b\x01\x10\x018\x01@\x01B}\x82\xb5\x18\x04\n" +
+	"\x02\x00\x01\n" +
+	"\tcom.helloB\n" +
+	"HelloProtoP\x01Z(github.com/example/hello-ct/gen/go/hello\xa2\x02\x03HXX\xaa\x02\x05Hello\xca\x02\x05Hello\xe2\x02\x11Hello\\GPBMetadata\xea\x02\x05Hellob\x06proto3"
 
 var (
 	file_hello_hello_proto_rawDescOnce sync.Once

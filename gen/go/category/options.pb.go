@@ -777,7 +777,8 @@ const file_category_options_proto_rawDesc = "" +
 	"\bcategory\x12\x1f.google.protobuf.MessageOptions\x18ц\x03 \x01(\v2 .category.CategoryMessageOptionsR\bcategory:f\n" +
 	"\x0efield_category\x12\x1d.google.protobuf.FieldOptions\x18҆\x03 \x01(\v2\x1e.category.FieldCategoryOptionsR\rfieldCategory:n\n" +
 	"\x10category_service\x12\x1f.google.protobuf.ServiceOptions\x18ӆ\x03 \x01(\v2 .category.CategoryServiceOptionsR\x0fcategoryService:j\n" +
-	"\x0fcategory_method\x12\x1e.google.protobuf.MethodOptions\x18Ԇ\x03 \x01(\v2\x1f.category.CategoryMethodOptionsR\x0ecategoryMethodBZZXgithub.com/vinodhalaharvi/buf-go-plugins/cmd/protoc-gen-category/proto/category;categoryb\x06proto3"
+	"\x0fcategory_method\x12\x1e.google.protobuf.MethodOptions\x18Ԇ\x03 \x01(\v2\x1f.category.CategoryMethodOptionsR\x0ecategoryMethodB\x89\x01\n" +
+	"\fcom.categoryB\fOptionsProtoP\x01Z+github.com/example/hello-ct/gen/go/category\xa2\x02\x03CXX\xaa\x02\bCategory\xca\x02\bCategory\xe2\x02\x14Category\\GPBMetadata\xea\x02\bCategoryb\x06proto3"
 
 var (
 	file_category_options_proto_rawDescOnce sync.Once
