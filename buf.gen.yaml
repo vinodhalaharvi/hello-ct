@@ -1,11 +1,23 @@
-version: v1
+version: v2
 plugins:
-  - plugin: go
+  # Go backend
+  - local: protoc-gen-go
     out: gen/go
     opt: paths=source_relative
-  - plugin: connect-go
+  - local: protoc-gen-connect-go
     out: gen/go
     opt: paths=source_relative
-  - plugin: category
+  - local: protoc-gen-category
     out: gen/go
     opt: paths=source_relative
+
+  # TypeScript frontend (v1 compatible)
+  - remote: buf.build/bufbuild/es:v1.10.0
+    out: gen/ts
+    opt: target=ts
+  - remote: buf.build/connectrpc/es:v1.6.1
+    out: gen/ts
+    opt: target=ts
+
+inputs:
+  - directory: proto

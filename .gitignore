@@ -1,12 +1,26 @@
+# Dependencies
+node_modules/
+web/node_modules/
+
+# Build outputs
 bin/
-*.exe
-*.dll
-*.so
-*.dylib
-*.test
-*.out
-.DS_Store
+dist/
+
+# Generated (optional - some prefer to check in)
+# gen/
+
+# IDE
 .idea/
 .vscode/
-vcs.xml
-workspace.xml
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+
+# Logs
+*.log

@@ -16,6 +16,20 @@ import (
 	"github.com/example/hello-ct/internal/service"
 )
 
+func corsMiddleware(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Connect-Protocol-Version")
+
+		if r.Method == "OPTIONS" {
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+		next.ServeHTTP(w, r)
+	})
+}
+
 func main() {
 	ctx := context.Background()
 
@@ -56,7 +70,7 @@ func main() {
 	}
 
 	log.Printf("Server listening on %s", addr)
-	if err := http.ListenAndServe(addr, h2c.NewHandler(mux, &http2.Server{})); err != nil {
+	if err := http.ListenAndServe(addr, h2c.NewHandler(corsMiddleware(mux), &http2.Server{})); err != nil {
 		log.Fatal(err)
 	}
 }
